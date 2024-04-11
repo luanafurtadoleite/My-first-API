@@ -25,6 +25,10 @@ const checkUserId = (request, response, next) => {
     request.userId = id
 }
 
+app.get('/', (request, response) => {
+    return response.json({Mensagem: "oi"});
+});
+
 app.get('/users', (request, response) => {
     return response.json(users);
 });
@@ -35,16 +39,15 @@ app.post('/users', (request, response) => {
 
     users.push(user)
 
-    return response.status(201).json(users);
+    return response.status(201).json(user);
 });
 
 app.put('/users/:id', (request, response) => {
     const{name, age} = request.body
-    const index = request.userIndex
-    const id = request.userId
-
-
-    const updateUser = { id: request.userId, name, age }
+    const id = request.params.id
+    const index = users.findIndex(user => user.id === id);
+    
+    const updateUser = { id: id, name, age }
      
     users[index] = updateUser
 
@@ -53,7 +56,8 @@ app.put('/users/:id', (request, response) => {
 });
 
 app.delete('/users/:id', (request, response) => {
-    const index = request.userIndex
+    const id = request.params.id
+    const index = users.findIndex(user => user.id === id);
 
     users.splice( index, 1 )
 
